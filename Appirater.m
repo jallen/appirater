@@ -333,6 +333,10 @@ static BOOL _modalOpen = false;
 	}
 }
 
++ (void)showRatingAlert {
+	[[Appirater sharedInstance] showRatingAlert];
+}
+
 + (void)appLaunched {
 	[Appirater appLaunched:YES];
 }

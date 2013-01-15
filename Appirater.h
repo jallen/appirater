@@ -98,6 +98,12 @@ extern NSString *const kAppiraterReminderRequestDate;
 #endif
 
 /*
+ Show the rating alert straightup
+*/
+
++ (void)showRatingAlert;
+
+/*
  Tells Appirater that the app has launched, and on devices that do NOT
  support multitasking, the 'uses' count will be incremented. You should
  call this method at the end of your application delegate's
