@@ -56,6 +56,7 @@ static double _timeBeforeReminding = 1;
 static BOOL _debug = NO;
 static id<AppiraterDelegate> _delegate;
 static BOOL _usesAnimation = TRUE;
+static BOOL _showsRateLaterButton = FALSE;
 static UIStatusBarStyle _statusBarStyle;
 static BOOL _modalOpen = false;
 
@@ -95,15 +96,23 @@ static BOOL _modalOpen = false;
 + (void) setDebug:(BOOL)debug {
     _debug = debug;
 }
+
 + (void)setDelegate:(id<AppiraterDelegate>)delegate{
 	_delegate = delegate;
 }
+
 + (void)setUsesAnimation:(BOOL)animation {
 	_usesAnimation = animation;
 }
+
++ (void)setShowsRateLaterButton:(BOOL)rateLater {
+	_showsRateLaterButton = rateLater;
+}
+
 + (void)setStatusBarStyle:(UIStatusBarStyle)style {
 	_statusBarStyle = style;
 }
+
 + (void)setModalOpen:(BOOL)open {
 	_modalOpen = open;
 }
@@ -156,11 +165,21 @@ static BOOL _modalOpen = false;
 }
 
 - (void)showRatingAlert {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
-														 message:APPIRATER_MESSAGE
-														delegate:self
-											   cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
+	UIAlertView *alertView;
+	if (_showsRateLaterButton) {
+		alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
+																					 message:APPIRATER_MESSAGE
+																					delegate:self
+																			 cancelButtonTitle:APPIRATER_CANCEL_BUTTON
+																			 otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
+	} else {
+		alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
+																						message:APPIRATER_MESSAGE
+																					 delegate:self
+																	cancelButtonTitle:APPIRATER_CANCEL_BUTTON
+																	otherButtonTitles:APPIRATER_RATE_BUTTON, nil];
+	}
+
 	self.ratingAlert = alertView;
 	[alertView show];
 	

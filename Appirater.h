@@ -230,6 +230,11 @@ extern NSString *const kAppiraterReminderRequestDate;
  */
 + (void)setUsesAnimation:(BOOL)animation;
 
+/*
+ Set whether or not Appirater show the "Rate Later" button.
+ */
++ (void)setShowsRateLaterButton:(BOOL)rateLater;
+
 @end
 
 
