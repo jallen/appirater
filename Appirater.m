@@ -65,15 +65,13 @@ static BOOL _debug = NO;
 	__weak static id<AppiraterDelegate> _delegate;
 #endif
 static BOOL _usesAnimation = TRUE;
-static BOOL _showsRateLaterButton = FALSE;
+static BOOL _showsRateLaterButton = TRUE;
 static UIStatusBarStyle _statusBarStyle;
 static BOOL _modalOpen = false;
 static BOOL _alwaysUseMainBundle = NO;
 
 @interface Appirater ()
 - (BOOL)connectedToNetwork;
-+ (Appirater*)sharedInstance;
-- (void)showRatingAlert;
 - (BOOL)ratingConditionsHaveBeenMet;
 - (void)incrementUseCount;
 - (void)hideRatingAlert;
