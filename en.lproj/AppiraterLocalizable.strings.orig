@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "Your love makes me stronger. \nPlease review %@.";
+"Rate %@" = "Send Love";
+"Rate" = "Review";
+"No, Thanks" = "Not Now";
+=======
+"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!";
+"Rate %@" = "Rate %@";
+"No, Thanks" = "No, thanks";
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
+"Remind me later" = "Remind me later";

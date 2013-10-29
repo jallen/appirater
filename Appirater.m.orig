@@ -114,11 +114,17 @@ static BOOL _alwaysUseMainBundle = NO;
 + (void)setUsesAnimation:(BOOL)animation {
 	_usesAnimation = animation;
 }
+<<<<<<< HEAD
 
++ (void)setShowsRateLaterButton:(BOOL)rateLater {
+	_showsRateLaterButton = rateLater;
+}
+
+=======
 + (void)setOpenInAppStore:(BOOL)openInAppStore {
     [Appirater sharedInstance].openInAppStore = openInAppStore;
 }
-
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
 + (void)setStatusBarStyle:(UIStatusBarStyle)style {
 	_statusBarStyle = style;
 }
@@ -399,12 +405,17 @@ static BOOL _alwaysUseMainBundle = NO;
 	}
 }
 
+<<<<<<< HEAD
++ (void)showRatingAlert {
+	[[Appirater sharedInstance] showRatingAlert];
+=======
 - (BOOL)userHasDeclinedToRate {
     return [[NSUserDefaults standardUserDefaults] boolForKey:kAppiraterDeclinedToRate];
 }
 
 - (BOOL)userHasRatedCurrentVersion {
     return [[NSUserDefaults standardUserDefaults] boolForKey:kAppiraterRatedCurrentVersion];
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
 }
 
 + (void)appLaunched {

@@ -77,8 +77,13 @@ extern NSString *const kAppiraterReminderRequestDate;
 /*
  Text of button that will send user to app review page.
  */
+<<<<<<< HEAD
 #define APPIRATER_LOCALIZED_RATE_BUTTON NSLocalizedStringFromTable(@"Rate", @"AppiraterLocalizable", nil)
 #define APPIRATER_RATE_BUTTON			APPIRATER_LOCALIZED_RATE_BUTTON
+=======
+#define APPIRATER_LOCALIZED_RATE_BUTTON NSLocalizedStringFromTableInBundle(@"Rate %@", @"AppiraterLocalizable", [Appirater bundle], nil)
+#define APPIRATER_RATE_BUTTON			[NSString stringWithFormat:APPIRATER_LOCALIZED_RATE_BUTTON, APPIRATER_APP_NAME]
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
 
 /*
  Text for button to remind the user to review later.
@@ -242,6 +247,11 @@ extern NSString *const kAppiraterReminderRequestDate;
 + (void)setUsesAnimation:(BOOL)animation;
 
 /*
+<<<<<<< HEAD
+ Set whether or not Appirater show the "Rate Later" button.
+ */
++ (void)setShowsRateLaterButton:(BOOL)rateLater;
+=======
  If set to YES, Appirater will open App Store link (instead of SKStoreProductViewController on iOS 6). Default NO.
  */
 + (void)setOpenInAppStore:(BOOL)openInAppStore;
@@ -252,6 +262,7 @@ extern NSString *const kAppiraterReminderRequestDate;
  in your main bundle.  Default is NO.
  */
 + (void)setAlwaysUseMainBundle:(BOOL)useMainBundle;
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
 
 @end
 

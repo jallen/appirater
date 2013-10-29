@@ -1,5 +1,9 @@
 "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "Sie nutzen %@ gerne? Dann nehmen Sie sich bitte für eine Bewertung einen Moment Zeit! Es dauert nicht länger als eine Minute. Vielen Dank!";
 "Rate %@" = "Bewerte %@";
+<<<<<<< HEAD
 "Rate" = "Bewerte";
+"No, Thanks" = "Nein, Danke";
+=======
 "No, Thanks" = "Nein, danke";
+>>>>>>> e74a220cd042c1f6584c2968cde13d171aac421d
 "Remind me later" = "Später erinnern";
