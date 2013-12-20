@@ -37,6 +37,7 @@
 #import "Appirater.h"
 #import <SystemConfiguration/SCNetworkReachability.h>
 #include <netinet/in.h>
+#import "AAMFeedbackViewController.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -65,13 +66,14 @@ static BOOL _debug = NO;
 	__weak static id<AppiraterDelegate> _delegate;
 #endif
 static BOOL _usesAnimation = TRUE;
-static BOOL _showsRateLaterButton = TRUE;
+static BOOL _showsRateLaterButton = NO;
 static UIStatusBarStyle _statusBarStyle;
 static BOOL _modalOpen = false;
 static BOOL _alwaysUseMainBundle = NO;
 
 @interface Appirater ()
 - (BOOL)connectedToNetwork;
+- (void)showQuestionAlert;
 - (BOOL)ratingConditionsHaveBeenMet;
 - (void)incrementUseCount;
 - (void)hideRatingAlert;
@@ -212,18 +214,19 @@ static BOOL _alwaysUseMainBundle = NO;
 	UIAlertView *alertView;
 	if (_showsRateLaterButton) {
 		alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
-																					 message:APPIRATER_MESSAGE
-																					delegate:self
-																			 cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-																			 otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
+                                               message:APPIRATER_MESSAGE
+                                              delegate:self
+                                     cancelButtonTitle:APPIRATER_CANCEL_BUTTON
+                                     otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
 	} else {
 		alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
-																						message:APPIRATER_MESSAGE
-																					 delegate:self
-																	cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-																	otherButtonTitles:APPIRATER_RATE_BUTTON, nil];
+                                               message:APPIRATER_MESSAGE
+                                              delegate:self
+                                     cancelButtonTitle:APPIRATER_CANCEL_BUTTON
+                                     otherButtonTitles:APPIRATER_RATE_BUTTON, nil];
 	}
-
+    
+    alertView.tag = 0;
 	self.ratingAlert = alertView;
     [alertView show];
 
@@ -231,6 +234,17 @@ static BOOL _alwaysUseMainBundle = NO;
     if (delegate && [delegate respondsToSelector:@selector(appiraterDidDisplayAlert:)]) {
              [delegate appiraterDidDisplayAlert:self];
     }
+}
+
+- (void)showQuestionAlert {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_GREETING
+                                                        message:APPIRATER_QUESTION
+                                                       delegate:self
+                                              cancelButtonTitle:APPIRATER_ASK_LATER
+                                              otherButtonTitles:APPIRATER_RATE, APPIRATER_FEEDBACK, nil];
+    alertView.tag = 1;
+    self.ratingAlert = alertView;
+    [alertView show];
 }
 
 - (BOOL)ratingConditionsHaveBeenMet {
@@ -376,10 +390,9 @@ static BOOL _alwaysUseMainBundle = NO;
 		[self ratingConditionsHaveBeenMet] &&
 		[self connectedToNetwork])
 	{
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self showRatingAlert];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showQuestionAlert];
+        });
 	}
 }
 
@@ -390,10 +403,9 @@ static BOOL _alwaysUseMainBundle = NO;
 		[self ratingConditionsHaveBeenMet] &&
 		[self connectedToNetwork])
 	{
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self showRatingAlert];
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showQuestionAlert];
+        });
 	}
 }
 
@@ -410,10 +422,9 @@ static BOOL _alwaysUseMainBundle = NO;
 }
 
 + (void)appLaunched:(BOOL)canPromptForRating {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+    });
 }
 
 - (void)hideRatingAlert {
@@ -431,17 +442,15 @@ static BOOL _alwaysUseMainBundle = NO;
 }
 
 + (void)appEnteredForeground:(BOOL)canPromptForRating {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [[Appirater sharedInstance] incrementAndRate:canPromptForRating];
+    });
 }
 
 + (void)userDidSignificantEvent:(BOOL)canPromptForRating {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       [[Appirater sharedInstance] incrementSignificantEventAndRate:canPromptForRating];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        [[Appirater sharedInstance] incrementSignificantEventAndRate:canPromptForRating];
+    });
 }
 
 + (void)showPrompt {
@@ -539,37 +548,68 @@ static BOOL _alwaysUseMainBundle = NO;
     
     id <AppiraterDelegate> delegate = _delegate;
 	
-	switch (buttonIndex) {
-		case 0:
-		{
-			// they don't want to rate it
-			[userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
-			[userDefaults synchronize];
-			if(delegate && [delegate respondsToSelector:@selector(appiraterDidDeclineToRate:)]){
-				[delegate appiraterDidDeclineToRate:self];
-			}
-			break;
-		}
-		case 1:
-		{
-			// they want to rate it
-			[Appirater rateApp];
-			if(delegate&& [delegate respondsToSelector:@selector(appiraterDidOptToRate:)]){
-				[delegate appiraterDidOptToRate:self];
-			}
-			break;
-		}
-		case 2:
-			// remind them later
-			[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
-			[userDefaults synchronize];
-			if(delegate && [delegate respondsToSelector:@selector(appiraterDidOptToRemindLater:)]){
-				[delegate appiraterDidOptToRemindLater:self];
-			}
-			break;
-		default:
-			break;
-	}
+    if (alertView.tag == 0) { // rating alert
+        switch (buttonIndex) {
+            case 0:
+            {
+                // they don't want to rate it
+                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults synchronize];
+                if (delegate && [delegate respondsToSelector:@selector(appiraterDidDeclineToRate:)]){
+                    [delegate appiraterDidDeclineToRate:self];
+                }
+                break;
+            }
+            case 1:
+            {
+                // they want to rate it
+                [Appirater rateApp];
+                if (delegate&& [delegate respondsToSelector:@selector(appiraterDidOptToRate:)]){
+                    [delegate appiraterDidOptToRate:self];
+                }
+                break;
+            }
+            case 2:
+                // remind them later
+                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
+                [userDefaults synchronize];
+                if (delegate && [delegate respondsToSelector:@selector(appiraterDidOptToRemindLater:)]){
+                    [delegate appiraterDidOptToRemindLater:self];
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    else { // question alert
+        switch (buttonIndex) {
+            case 0: {
+                // remind them later
+                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
+                [userDefaults synchronize];
+                if (delegate && [delegate respondsToSelector:@selector(appiraterDidOptToRemindLater:)]){
+                    [delegate appiraterDidOptToRemindLater:self];
+                }
+                break;
+            }
+            case 1: {
+                // they want to rate it
+                [self showRatingAlert];
+                break;
+            }
+            case 2:
+                // they don't want to rate it and have feedback
+                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults synchronize];
+                if (delegate && [delegate respondsToSelector:@selector(appiraterDidHaveFeedback:)]) {
+                    [delegate appiraterDidHaveFeedback:self];
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
 }
 
 //Delegate call from the StoreKit view.

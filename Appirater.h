@@ -85,6 +85,17 @@ extern NSString *const kAppiraterReminderRequestDate;
  */
 #define APPIRATER_RATE_LATER			NSLocalizedStringFromTableInBundle(@"Remind me later", @"AppiraterLocalizable", [Appirater bundle], nil)
 
+#define APPIRATER_GREETING              NSLocalizedStringFromTableInBundle(@"Hi there", @"AppiraterLocalizable", [Appirater bundle], nil)
+
+#define APPIRATER_LOCALIZED_QUESTION    NSLocalizedStringFromTableInBundle(@"How are you liking %@?", @"AppiraterLocalizable", [Appirater bundle], nil)
+#define APPIRATER_QUESTION              [NSString stringWithFormat:APPIRATER_LOCALIZED_QUESTION, APPIRATER_APP_NAME]
+
+#define APPIRATER_FEEDBACK              NSLocalizedStringFromTableInBundle(@"Something's not right", @"AppiraterLocalizable", [Appirater bundle], nil)
+
+#define APPIRATER_RATE                  NSLocalizedStringFromTableInBundle(@"I love it!", @"AppiraterLocalizable", [Appirater bundle], nil)
+
+#define APPIRATER_ASK_LATER             NSLocalizedStringFromTableInBundle(@"Ask me later", @"AppiraterLocalizable", [Appirater bundle], nil)
+
 @interface Appirater : NSObject <UIAlertViewDelegate, SKStoreProductViewControllerDelegate> {
 
 	UIAlertView		*ratingAlert;

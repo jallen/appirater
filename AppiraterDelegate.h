@@ -15,6 +15,7 @@
 @optional
 -(void)appiraterDidDisplayAlert:(Appirater *)appirater;
 -(void)appiraterDidDeclineToRate:(Appirater *)appirater;
+-(void)appiraterDidHaveFeedback:(Appirater *)appirater;
 -(void)appiraterDidOptToRate:(Appirater *)appirater;
 -(void)appiraterDidOptToRemindLater:(Appirater *)appirater;
 -(void)appiraterWillPresentModalView:(Appirater *)appirater animated:(BOOL)animated;
